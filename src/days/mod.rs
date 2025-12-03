@@ -3,6 +3,7 @@ use std::time::{Duration, Instant};
 
 pub mod day01;
 pub mod day02;
+pub mod day03;
 
 pub trait Solution {
     fn from_str(input: &str) -> Self
@@ -77,6 +78,7 @@ fn create_solution(day: u8, input: &str) -> Option<Box<dyn Solution>> {
     match day {
         1 => Some(Box::new(day01::Day01::from_str(input))),
         2 => Some(Box::new(day02::Day02::from_str(input))),
+        3 => Some(Box::new(day03::Day03::from_str(input))),
         _ => None,
     }
 }
