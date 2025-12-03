@@ -1,8 +1,8 @@
+use crate::days::DayResult;
+use comfy_table::Table;
 use std::fmt::Display;
 use std::ops::RangeInclusive;
 use std::time::Duration;
-use comfy_table::Table;
-use crate::days::DayResult;
 
 pub struct Report {
     pub results: Vec<DayResult>,
@@ -48,14 +48,24 @@ impl Display for Report {
                 format!("{:02}", result.day),
                 Self::format_duration(result.input_load_time),
                 result.part1_answer.as_deref().unwrap_or("-").to_string(),
-                result.part1_time.map(Self::format_duration).unwrap_or("-".to_string()),
+                result
+                    .part1_time
+                    .map(Self::format_duration)
+                    .unwrap_or("-".to_string()),
                 result.part2_answer.as_deref().unwrap_or("-").to_string(),
-                result.part2_time.map(Self::format_duration).unwrap_or("-".to_string()),
+                result
+                    .part2_time
+                    .map(Self::format_duration)
+                    .unwrap_or("-".to_string()),
                 Self::format_duration(result.total_time),
             ]);
         }
 
         writeln!(f, "{}", table)?;
-        writeln!(f, "\nTotal time: {}", Self::format_duration(self.total_time()))
+        writeln!(
+            f,
+            "\nTotal time: {}",
+            Self::format_duration(self.total_time())
+        )
     }
 }
