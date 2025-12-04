@@ -10,7 +10,6 @@ fn main() {
 
     match args.len() {
         1 => {
-            println!("Running all available days...\n");
             let report = Report::from_day_range(1..=25);
             println!("{}", report);
         }
