@@ -15,7 +15,6 @@ fn main() {
         }
         2 => match args[1].parse::<u8>() {
             Ok(day) if (1..=25).contains(&day) => {
-                println!("Running day {}...\n", day);
                 let report = Report::from_day_range(day..=day);
                 if report.results.is_empty() {
                     eprintln!("Error: No solution found for day {}", day);

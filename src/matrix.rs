@@ -38,4 +38,9 @@ impl<T> Matrix<T> {
             (new_row < self.rows && new_col < self.cols).then_some((new_row, new_col))
         })
     }
+
+    pub fn iter_coords(&self) -> impl Iterator<Item = (usize, usize)> {
+        let cols = self.cols;
+        (0..self.rows).flat_map(move |row| (0..cols).map(move |col| (row, col)))
+    }
 }

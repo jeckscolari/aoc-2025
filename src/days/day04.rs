@@ -1,15 +1,18 @@
 use crate::days::Solution;
 use crate::matrix::Matrix;
 
+const ROLL: char = '@';
+const EMPTY: char = '.';
+
 pub struct Day04 {
     matrix: Matrix<char>,
 }
 
 fn is_accessible(matrix: &Matrix<char>, row: usize, col: usize) -> bool {
-    matrix.get(row, col) == Some(&'@')
+    matrix.get(row, col) == Some(&ROLL)
         && matrix
             .neighbors(row, col)
-            .filter(|&(r, c)| matrix.get(r, c) == Some(&'@'))
+            .filter(|&(r, c)| matrix.get(r, c) == Some(&ROLL))
             .count()
             < 4
 }
@@ -21,41 +24,33 @@ impl Solution for Day04 {
     }
 
     fn part1(&self) -> String {
-        let mut count = 0;
-        for row in 0..self.matrix.rows {
-            for col in 0..self.matrix.cols {
-                if is_accessible(&self.matrix, row, col) {
-                    count += 1;
-                }
-            }
-        }
-        count.to_string()
+        self.matrix
+            .iter_coords()
+            .filter(|&(row, col)| is_accessible(&self.matrix, row, col))
+            .count()
+            .to_string()
     }
 
     fn part2(&self) -> String {
         let mut matrix = self.matrix.clone();
-        let mut total = 0;
+        let mut count = 0;
 
         loop {
-            let mut to_remove = vec![];
-            for row in 0..matrix.rows {
-                for col in 0..matrix.cols {
-                    if is_accessible(&matrix, row, col) {
-                        to_remove.push((row, col));
-                    }
-                }
-            }
+            let to_remove: Vec<_> = matrix
+                .iter_coords()
+                .filter(|&(row, col)| is_accessible(&matrix, row, col))
+                .collect();
 
             if to_remove.is_empty() {
                 break;
             }
 
             for (row, col) in to_remove {
-                *matrix.get_mut(row, col).unwrap() = '.';
-                total += 1;
+                *matrix.get_mut(row, col).unwrap() = EMPTY;
+                count += 1;
             }
         }
 
-        total.to_string()
+        count.to_string()
     }
 }
