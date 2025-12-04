@@ -1,9 +1,10 @@
 use std::fs;
 use std::time::{Duration, Instant};
 
-pub mod day01;
-pub mod day02;
-pub mod day03;
+mod day01;
+mod day02;
+mod day03;
+mod day04;
 
 pub trait Solution {
     fn from_str(input: &str) -> Self
@@ -79,6 +80,7 @@ fn create_solution(day: u8, input: &str) -> Option<Box<dyn Solution>> {
         1 => Some(Box::new(day01::Day01::from_str(input))),
         2 => Some(Box::new(day02::Day02::from_str(input))),
         3 => Some(Box::new(day03::Day03::from_str(input))),
+        4 => Some(Box::new(day04::Day04::from_str(input))),
         _ => None,
     }
 }

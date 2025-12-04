@@ -1,4 +1,5 @@
 mod days;
+mod matrix;
 mod report;
 
 use report::Report;
