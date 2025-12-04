@@ -1,0 +1,48 @@
+name: Update README with latest run results
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+    
+    - name: Build and Run
+      run: |
+        cargo build --release
+        ./target/release/aoc-2025 > output.txt
+    
+    - name: Update README
+      run: |
+        cat > README.md << 'EOF'
+        # Advent of Code 2025
+
+        ## Latest Run Results
+
+        ```
+        EOF
+        cat output.txt >> README.md
+        echo '```' >> README.md
+        echo "" >> README.md
+        echo "Last updated: $(date -u)" >> README.md
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add README.md
+        git commit -m "Update README with latest run results" || echo "No changes to commit"
+        git push
