@@ -8,6 +8,23 @@ pub struct Day01 {
     rotations: Vec<Rotation>,
 }
 
+enum Direction {
+    Left,
+    Right,
+}
+
+impl FromStr for Direction {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "L" => Ok(Direction::Left),
+            "R" => Ok(Direction::Right),
+            _ => Err(format!("Invalid direction: {s}")),
+        }
+    }
+}
+
 struct Rotation {
     direction: Direction,
     distance: i32,
@@ -21,28 +38,11 @@ impl FromStr for Rotation {
         let direction = dir_str.parse()?;
         let distance = dist_str
             .parse()
-            .map_err(|e| format!("Invalid distance: {}", e))?;
+            .map_err(|e| format!("Invalid distance: {e}"))?;
         Ok(Rotation {
             direction,
             distance,
         })
-    }
-}
-
-enum Direction {
-    Left,
-    Right,
-}
-
-impl FromStr for Direction {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "L" => Ok(Direction::Left),
-            "R" => Ok(Direction::Right),
-            _ => Err(format!("Invalid direction: {}", s)),
-        }
     }
 }
 

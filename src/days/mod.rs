@@ -5,6 +5,7 @@ mod day01;
 mod day02;
 mod day03;
 mod day04;
+mod day05;
 
 pub trait Solution {
     fn from_str(input: &str) -> Self
@@ -81,6 +82,7 @@ fn create_solution(day: u8, input: &str) -> Option<Box<dyn Solution>> {
         2 => Some(Box::new(day02::Day02::from_str(input))),
         3 => Some(Box::new(day03::Day03::from_str(input))),
         4 => Some(Box::new(day04::Day04::from_str(input))),
+        5 => Some(Box::new(day05::Day05::from_str(input))),
         _ => None,
     }
 }

@@ -14,7 +14,14 @@ impl FromStr for Bank {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let batteries = s.chars().map(|b| b.to_digit(10).unwrap() as u64).collect();
+        let batteries = s
+            .chars()
+            .map(|b| {
+                b.to_digit(10)
+                    .map(|d| d as u64)
+                    .ok_or_else(|| format!("Invalid digit: {b}"))
+            })
+            .collect::<Result<Vec<_>, _>>()?;
         Ok(Bank { batteries })
     }
 }
