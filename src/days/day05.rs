@@ -53,17 +53,26 @@ impl Day05 {
     }
 }
 
-impl Solution for Day05 {
-    fn from_str(input: &str) -> Self {
-        let (ranges_str, ingredients_str) = input.split_once("\n\n").unwrap();
+impl FromStr for Day05 {
+    type Err = String;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let (ranges_str, ingredients_str) = input
+            .split_once("\n\n")
+            .ok_or("Invalid input: missing separator")?;
+
         let mut ranges: Vec<Range> = ranges_str
             .lines()
-            .map(|line| line.parse::<Range>().unwrap())
-            .collect();
+            .map(|line| line.parse::<Range>())
+            .collect::<Result<Vec<_>, _>>()?;
+
         let ingredients = ingredients_str
             .lines()
-            .map(|line| line.parse::<u64>().unwrap())
-            .collect();
+            .map(|line| {
+                line.parse::<u64>()
+                    .map_err(|e| format!("Invalid ingredient: {e}"))
+            })
+            .collect::<Result<Vec<_>, _>>()?;
 
         ranges.sort_by_key(|r| r.start);
 
@@ -77,12 +86,14 @@ impl Solution for Day05 {
             }
         }
 
-        Day05 {
+        Ok(Day05 {
             ranges: merged_ranges,
             ingredients,
-        }
+        })
     }
+}
 
+impl Solution for Day05 {
     fn part1(&self) -> String {
         self.ingredients
             .iter()

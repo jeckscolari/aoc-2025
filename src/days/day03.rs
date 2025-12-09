@@ -48,15 +48,20 @@ impl Bank {
     }
 }
 
-impl Solution for Day03 {
-    fn from_str(input: &str) -> Self {
+impl FromStr for Day03 {
+    type Err = String;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
         let banks = input
             .lines()
-            .map(|line| line.parse::<Bank>().unwrap())
-            .collect();
-        Day03 { banks }
-    }
+            .map(|line| line.parse::<Bank>())
+            .collect::<Result<Vec<_>, _>>()?;
 
+        Ok(Day03 { banks })
+    }
+}
+
+impl Solution for Day03 {
     fn part1(&self) -> String {
         self.banks
             .iter()

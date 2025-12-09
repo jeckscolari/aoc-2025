@@ -1,4 +1,5 @@
 use std::fs;
+use std::str::FromStr;
 use std::time::{Duration, Instant};
 
 mod day01;
@@ -6,14 +7,15 @@ mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
 
-pub trait Solution {
-    fn from_str(input: &str) -> Self
-    where
-        Self: Sized;
+pub trait Solution: FromStr {
     fn part1(&self) -> String;
     fn part2(&self) -> String;
 }
+
+type PartResult = (Option<String>, Option<Duration>);
+type SolutionResult = (PartResult, PartResult);
 
 pub fn read_input(day: u8) -> Result<String, std::io::Error> {
     let input_path = format!("inputs/day{:02}.txt", day);
@@ -45,21 +47,7 @@ impl DayResult {
         let (input_result, input_load_time) = time_it!(read_input(day));
         let input = input_result.ok()?;
 
-        let solution = create_solution(day, &input)?;
-
-        let (part1_result, part1_time) = time_it!(solution.part1());
-        let (part1_answer, part1_time) = if part1_result.is_empty() {
-            (None, None)
-        } else {
-            (Some(part1_result), Some(part1_time))
-        };
-
-        let (part2_result, part2_time) = time_it!(solution.part2());
-        let (part2_answer, part2_time) = if part2_result.is_empty() {
-            (None, None)
-        } else {
-            (Some(part2_result), Some(part2_time))
-        };
+        let ((part1_answer, part1_time), (part2_answer, part2_time)) = run_solution(day, &input)?;
 
         let total_time =
             input_load_time + part1_time.unwrap_or_default() + part2_time.unwrap_or_default();
@@ -76,13 +64,36 @@ impl DayResult {
     }
 }
 
-fn create_solution(day: u8, input: &str) -> Option<Box<dyn Solution>> {
+macro_rules! run_day {
+    ($input:expr, $day:ty) => {{
+        let solution = $input.parse::<$day>().ok()?;
+
+        let (part1_result, part1_time) = time_it!(solution.part1());
+        let (part1_answer, part1_time) = if part1_result.is_empty() {
+            (None, None)
+        } else {
+            (Some(part1_result), Some(part1_time))
+        };
+
+        let (part2_result, part2_time) = time_it!(solution.part2());
+        let (part2_answer, part2_time) = if part2_result.is_empty() {
+            (None, None)
+        } else {
+            (Some(part2_result), Some(part2_time))
+        };
+
+        Some(((part1_answer, part1_time), (part2_answer, part2_time)))
+    }};
+}
+
+fn run_solution(day: u8, input: &str) -> Option<SolutionResult> {
     match day {
-        1 => Some(Box::new(day01::Day01::from_str(input))),
-        2 => Some(Box::new(day02::Day02::from_str(input))),
-        3 => Some(Box::new(day03::Day03::from_str(input))),
-        4 => Some(Box::new(day04::Day04::from_str(input))),
-        5 => Some(Box::new(day05::Day05::from_str(input))),
+        1 => run_day!(input, day01::Day01),
+        2 => run_day!(input, day02::Day02),
+        3 => run_day!(input, day03::Day03),
+        4 => run_day!(input, day04::Day04),
+        5 => run_day!(input, day05::Day05),
+        6 => run_day!(input, day06::Day06),
         _ => None,
     }
 }

@@ -46,16 +46,20 @@ impl FromStr for Rotation {
     }
 }
 
-impl Solution for Day01 {
-    fn from_str(input: &str) -> Self {
+impl FromStr for Day01 {
+    type Err = String;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
         let rotations = input
             .lines()
-            .map(|line| line.parse::<Rotation>().unwrap())
-            .collect();
+            .map(|line| line.parse::<Rotation>())
+            .collect::<Result<Vec<_>, _>>()?;
 
-        Day01 { rotations }
+        Ok(Day01 { rotations })
     }
+}
 
+impl Solution for Day01 {
     fn part1(&self) -> String {
         let mut dial = INITIAL_DIAL;
         let mut count = 0;

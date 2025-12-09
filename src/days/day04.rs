@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::days::Solution;
 use crate::matrix::Matrix;
 
@@ -17,12 +19,16 @@ fn is_accessible(matrix: &Matrix<char>, row: usize, col: usize) -> bool {
             < 4
 }
 
-impl Solution for Day04 {
-    fn from_str(input: &str) -> Self {
-        let matrix = Matrix::new(input.lines().map(|line| line.chars().collect()).collect());
-        Day04 { matrix }
-    }
+impl FromStr for Day04 {
+    type Err = String;
 
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let matrix = Matrix::new(input.lines().map(|line| line.chars().collect()).collect());
+        Ok(Day04 { matrix })
+    }
+}
+
+impl Solution for Day04 {
     fn part1(&self) -> String {
         self.matrix
             .iter_coords()

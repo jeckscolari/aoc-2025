@@ -69,17 +69,21 @@ impl FromStr for Range {
     }
 }
 
-impl Solution for Day02 {
-    fn from_str(input: &str) -> Self {
+impl FromStr for Day02 {
+    type Err = String;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
         let ranges = input
             .trim()
             .split(',')
-            .map(|range_str| range_str.parse::<Range>().unwrap())
-            .collect();
+            .map(|range_str| range_str.parse::<Range>())
+            .collect::<Result<Vec<_>, _>>()?;
 
-        Day02 { ranges }
+        Ok(Day02 { ranges })
     }
+}
 
+impl Solution for Day02 {
     fn part1(&self) -> String {
         self.ranges
             .iter()
