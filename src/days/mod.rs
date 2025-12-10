@@ -10,6 +10,7 @@ mod day05;
 mod day06;
 mod day07;
 mod day08;
+mod day09;
 
 pub trait Solution: FromStr {
     fn part1(&self) -> String;
@@ -98,6 +99,7 @@ fn run_solution(day: u8, input: &str) -> Option<SolutionResult> {
         6 => run_day!(input, day06::Day06),
         7 => run_day!(input, day07::Day07),
         8 => run_day!(input, day08::Day08),
+        9 => run_day!(input, day09::Day09),
         _ => None,
     }
 }

@@ -30,11 +30,26 @@ impl Report {
     }
 }
 
+impl Report {
+    fn count_stars(result: &DayResult) -> usize {
+        result.part1_answer.is_some() as usize + result.part2_answer.is_some() as usize
+    }
+
+    fn format_stars(stars: usize) -> String {
+        "★".repeat(stars) + &"☆".repeat(2 - stars)
+    }
+
+    pub fn total_stars(&self) -> usize {
+        self.results.iter().map(Self::count_stars).sum()
+    }
+}
+
 impl Display for Report {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut table = Table::new();
         table.set_header(vec![
             "Day",
+            "Stars",
             "Load Time",
             "Part 1 Answer",
             "Part 1 Time",
@@ -46,6 +61,7 @@ impl Display for Report {
         for result in &self.results {
             table.add_row(vec![
                 format!("{:02}", result.day),
+                Self::format_stars(Self::count_stars(result)),
                 Self::format_duration(result.input_load_time),
                 result.part1_answer.as_deref().unwrap_or("-").to_string(),
                 result
@@ -64,7 +80,8 @@ impl Display for Report {
         writeln!(f, "{}", table)?;
         writeln!(
             f,
-            "\nTotal time: {}",
+            "\nTotal: {} stars | {}",
+            self.total_stars(),
             Self::format_duration(self.total_time())
         )
     }

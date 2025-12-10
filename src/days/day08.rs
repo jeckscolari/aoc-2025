@@ -125,10 +125,7 @@ impl Solution for Day08 {
         let mut sizes = uf.sizes();
         sizes.sort();
         sizes.reverse();
-        sizes.iter()
-            .take(3)
-            .product::<usize>()
-            .to_string()
+        sizes.iter().take(3).product::<usize>().to_string()
     }
 
     fn part2(&self) -> String {
